@@ -52,15 +52,15 @@ docker run --rm -it \
 APIキーがまだ無い場合は `DRY_RUN=1` を付けて動作確認できます。
 
 ```bash
-DRY_RUN=1 python scripts/01_responses.py
+DRY_RUN=1 python docker-check/01_responses.py
 ```
 
 ### 5) サンプルスクリプト（第1〜第3章向け）
 
 ```bash
-python scripts/01_responses.py
-python scripts/02_chat_completions.py
-python scripts/03_compare.py
+python docker-check/01_responses.py
+python docker-check/02_chat_completions.py
+python docker-check/03_compare.py
 ```
 
 ### 6) Jupyterを使いたい場合（任意）
