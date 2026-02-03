@@ -37,6 +37,12 @@ docker build \
 OpenAI Python SDKは `openai==2.16.0` に固定しています。  
 （参考: https://pypi.org/project/openai/ ）
 
+### 2-1) docker compose を使う場合（推奨）
+
+```bash
+UID="$(id -u)" GID="$(id -g)" docker compose build
+```
+
 ### 3) コンテナ起動（シェルに入る）
 
 ```bash
@@ -45,6 +51,12 @@ docker run --rm -it \
   -v "$(pwd)":/workspace \
   -w /workspace \
   ai-study:base
+```
+
+#### docker compose の場合
+
+```bash
+UID="$(id -u)" GID="$(id -g)" docker compose run --rm study
 ```
 
 ### 4) APIキーなしでの検証（DRY_RUN）
@@ -82,7 +94,13 @@ docker run --rm -it \
   ai-study:base
 ```
 
-コンテナ内で：
+#### docker compose の場合
+
+```bash
+UID="$(id -u)" GID="$(id -g)" docker compose up jupyter
+```
+
+コンテナ内で（docker run の場合）：
 
 ```bash
 jupyter lab --ip 0.0.0.0 --no-browser --NotebookApp.token=''
