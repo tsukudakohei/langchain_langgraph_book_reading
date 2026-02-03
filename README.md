@@ -25,35 +25,16 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
 
 ※ `.env` は `.gitignore` 済みです。
 
-### 2) Dockerイメージをビルド
-
-```bash
-docker build \
-  --build-arg UID="$(id -u)" \
-  --build-arg GID="$(id -g)" \
-  -t ai-study:base .
-```
-
-OpenAI Python SDKは `openai==2.16.0` に固定しています。  
-（参考: https://pypi.org/project/openai/ ）
-
-### 2-1) docker compose を使う場合（推奨）
+### 2) docker compose でビルド（推奨）
 
 ```bash
 UID="$(id -u)" GID="$(id -g)" docker compose build
 ```
 
+OpenAI Python SDKは `openai==2.16.0` に固定しています。  
+（参考: https://pypi.org/project/openai/ ）
+
 ### 3) コンテナ起動（シェルに入る）
-
-```bash
-docker run --rm -it \
-  --env-file .env \
-  -v "$(pwd)":/workspace \
-  -w /workspace \
-  ai-study:base
-```
-
-#### docker compose の場合
 
 ```bash
 UID="$(id -u)" GID="$(id -g)" docker compose run --rm study
@@ -78,33 +59,11 @@ python docker-check/03_compare.py
 ### 6) Jupyterを使いたい場合（任意）
 
 ```bash
-docker build \
-  --build-arg UID="$(id -u)" \
-  --build-arg GID="$(id -g)" \
-  --build-arg INSTALL_JUPYTER=1 \
-  -t ai-study:base .
-```
-
-```bash
-docker run --rm -it \
-  --env-file .env \
-  -p 8888:8888 \
-  -v "$(pwd)":/workspace \
-  -w /workspace \
-  ai-study:base
-```
-
-#### docker compose の場合
-
-```bash
 UID="$(id -u)" GID="$(id -g)" docker compose up jupyter
 ```
 
-コンテナ内で（docker run の場合）：
-
-```bash
-jupyter lab --ip 0.0.0.0 --no-browser --NotebookApp.token=''
-```
+起動後はブラウザからアクセスします（`http://localhost:8888`）。  
+ポートフォワードは `compose.yaml` で `8888:8888` を設定済みです。
 
 ## 参考リンク
 - 書籍（Amazon）: https://www.amazon.co.jp/dp/4297145308
