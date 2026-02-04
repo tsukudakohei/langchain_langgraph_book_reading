@@ -1,3 +1,4 @@
 # Reading materials
 *.epub
+.env
 *.pdf

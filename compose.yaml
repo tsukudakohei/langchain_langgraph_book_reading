@@ -1,0 +1,32 @@
+name: ai-study
+
+services:
+  study:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        INSTALL_JUPYTER: 0
+    env_file:
+      - .env
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: bash
+
+  jupyter:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        INSTALL_JUPYTER: 1
+    env_file:
+      - .env
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8888:8888"
+    command: jupyter lab --ip 0.0.0.0 --no-browser --NotebookApp.token=''
