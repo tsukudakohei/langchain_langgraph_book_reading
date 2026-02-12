@@ -2,3 +2,10 @@
 *.epub
 .env
 *.pdf
+
+# Python
+__pycache__/
+*.pyc
+
+# Agents SDK demos
+docker-check/agents_sdk_conversations.db

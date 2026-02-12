@@ -30,9 +30,15 @@ WORKDIR /workspace
 
 RUN python -m pip install --upgrade pip \
  && pip install --no-cache-dir \
-      "openai==2.16.0" \
-      "python-dotenv>=1.0.0" \
-      "rich>=13.0.0"
+      "openai==2.20.0" \
+      "openai-agents==0.8.1" \
+      "python-dotenv==1.2.1" \
+      "rich==14.3.2" \
+      "langchain==1.2.10" \
+      "langchain-core==1.2.11" \
+      "langchain-openai==1.1.9" \
+      "langgraph==1.0.8" \
+      "langgraph-prebuilt==1.0.7"
 
 ARG INSTALL_JUPYTER=0
 RUN if [ "${INSTALL_JUPYTER}" = "1" ]; then \

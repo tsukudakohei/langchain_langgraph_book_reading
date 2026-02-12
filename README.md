@@ -7,7 +7,7 @@
 
 ## 実行環境（Docker）
 
-第1〜第3章（API基礎 / Chat Completions / Responses）向けの学習環境を、Dockerで再現できるようにしています。  
+第1〜第4章（API基礎 / Chat Completions / Responses / LangChain基礎）向けの学習環境を、Dockerで再現できるようにしています。  
 OpenAIは**新規プロジェクトではResponses APIを推奨**しているため、以降の説明はResponses中心です。  
 （参考: https://platform.openai.com/docs/guides/responses-vs-chat-completions ）
 
@@ -31,8 +31,10 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
 UID="$(id -u)" GID="$(id -g)" docker compose build
 ```
 
-OpenAI Python SDKは `openai==2.16.0` に固定しています。  
+OpenAI Python SDKは `openai==2.20.0` に固定しています。  
 （参考: https://pypi.org/project/openai/ ）
+
+LangChain / LangGraph も `Dockerfile` でバージョン固定しています（第4章向け）。
 
 ### 3) コンテナ起動（シェルに入る）
 
@@ -64,6 +66,51 @@ UID="$(id -u)" GID="$(id -g)" docker compose up jupyter
 
 起動後はブラウザからアクセスします（`http://localhost:8888`）。  
 ポートフォワードは `compose.yaml` で `8888:8888` を設定済みです。
+
+## 第4章（LangChain基礎）
+
+勉強会メモ: `docs/ch04.md`
+
+### サンプルスクリプト（第4章向け）
+
+```bash
+sh 4-1.sh
+sh 4-2.sh
+sh 4-3.sh
+sh 4-4.sh
+sh 4-5.sh
+sh 4-6.sh
+sh 4-7.sh
+```
+
+APIキーなしでの動作確認:
+
+```bash
+DRY_RUN=1 sh 4-1.sh
+```
+
+Streaming（ブラウザで確認したい場合）:
+
+```bash
+SERVE=1 sh 4-6.sh
+```
+
+## 追加トピック（OpenAI Agents SDK）
+
+勉強会メモ: `docs/agents_sdk.md`
+
+```bash
+sh 4-8.sh
+sh 4-9.sh
+sh 4-10.sh
+sh 4-11.sh
+```
+
+APIキーなしでの動作確認:
+
+```bash
+DRY_RUN=1 sh 4-8.sh
+```
 
 ## 参考リンク
 - 書籍（Amazon）: https://www.amazon.co.jp/dp/4297145308

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LangChain Streaming Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 24px;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+          Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        line-height: 1.5;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      textarea {
+        width: min(900px, 100%);
+        height: 96px;
+        padding: 10px;
+      }
+      button {
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      pre {
+        width: min(900px, 100%);
+        min-height: 180px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        background: #fafafa;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .muted {
+        color: #666;
+        font-size: 12px;
+      }
+      .ok {
+        color: #0b7a3a;
+      }
+      .err {
+        color: #b42318;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Streaming Demo (SSE)</h1>
+    <p class="muted">
+      <code>/events</code> を EventSource で購読して、トークンが来るたびに画面へ追記します。
+    </p>
+
+    <form id="form">
+      <label for="prompt">Prompt</label><br />
+      <textarea id="prompt">日本語で、短い昔話を1つ作ってください。</textarea>
+      <div class="row" style="margin-top: 10px">
+        <button type="submit">Start</button>
+        <button type="button" id="stop">Stop</button>
+        <span id="status" class="muted">idle</span>
+      </div>
+    </form>
+
+    <h2>Output</h2>
+    <pre id="out"></pre>
+
+    <script>
+      const form = document.getElementById("form");
+      const promptEl = document.getElementById("prompt");
+      const outEl = document.getElementById("out");
+      const statusEl = document.getElementById("status");
+      const stopBtn = document.getElementById("stop");
+
+      let es = null;
+
+      function setStatus(text, kind) {
+        statusEl.textContent = text;
+        statusEl.className = "muted " + (kind || "");
+      }
+
+      function stop() {
+        if (es) {
+          es.close();
+          es = null;
+        }
+        setStatus("stopped", "");
+      }
+
+      function start(prompt) {
+        stop();
+        outEl.textContent = "";
+        setStatus("connecting...", "");
+
+        const url = "/events?prompt=" + encodeURIComponent(prompt);
+        es = new EventSource(url);
+
+        es.onopen = () => setStatus("connected", "ok");
+
+        es.onmessage = (ev) => {
+          const msg = JSON.parse(ev.data);
+          if (msg.type === "token") {
+            outEl.textContent += msg.text;
+          } else if (msg.type === "end") {
+            setStatus("done", "ok");
+            stop();
+          } else if (msg.type === "error") {
+            setStatus("error: " + msg.message, "err");
+            stop();
+          }
+        };
+
+        es.onerror = () => {
+          setStatus("connection error", "err");
+          stop();
+        };
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        start(promptEl.value);
+      });
+      stopBtn.addEventListener("click", stop);
+    </script>
+  </body>
+</html>
+
