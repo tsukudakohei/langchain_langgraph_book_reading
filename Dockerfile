@@ -28,11 +28,14 @@ RUN set -eux; \
 
 WORKDIR /workspace
 
+COPY requirements.txt /tmp/requirements.txt
+
 RUN python -m pip install --upgrade pip \
  && pip install --no-cache-dir \
       "openai==2.16.0" \
       "python-dotenv>=1.0.0" \
-      "rich>=13.0.0"
+      "rich>=13.0.0" \
+ && pip install --no-cache-dir -r /tmp/requirements.txt
 
 ARG INSTALL_JUPYTER=0
 RUN if [ "${INSTALL_JUPYTER}" = "1" ]; then \
