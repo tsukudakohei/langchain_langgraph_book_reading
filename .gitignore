@@ -2,3 +2,10 @@
 *.epub
 .env
 *.pdf
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+
+# Local vector store data
+.chroma/
