@@ -54,6 +54,40 @@ def main() -> None:
     streamed = list(streamer.stream(None))
     print_section("stream (RunnableGenerator)", f"{streamed}  -> joined: {''.join(streamed)}")
 
+    # 6) 応用例（簡易記法）:
+    # dict と lambda は LCEL 内で自動的に Runnable として扱われる。
+    triage_chain = (
+        {
+            "text": lambda x: x["text"].strip(),
+            "channel": lambda x: x.get("channel", "chat"),
+        }
+        | RunnablePassthrough.assign(
+            lowered=lambda x: x["text"].lower(),
+            length=lambda x: len(x["text"]),
+            severity=lambda x: (
+                "high"
+                if any(k in x["text"].lower() for k in ["error", "fail", "timeout", "障害"])
+                else "normal"
+            ),
+        )
+        | RunnablePassthrough().pick(["text", "channel", "length", "severity"])
+        | {
+            "ticket_title": lambda x: f"[{x['severity'].upper()}] {x['text'][:40]}",
+            "route": lambda x: "oncall" if x["severity"] == "high" else "support",
+            "summary": lambda x: (
+                f"channel={x['channel']} len={x['length']} severity={x['severity']} "
+                f"text='{x['text'][:60]}'"
+            ),
+        }
+    )
+
+    triage_in = {
+        "text": "API timeout が断続的に発生。15分で3回failしています。",
+        "channel": "slack",
+    }
+    triage_out = triage_chain.invoke(triage_in)
+    print_section("practical mini-flow (no API, shorthand LCEL)", f"input={triage_in}\noutput={triage_out}")
+
 
 if __name__ == "__main__":
     main()
