@@ -1,0 +1,21 @@
+# ch04/ch05 study dependencies (LangChain v1 style)
+# Install inside your Docker container (recommended):
+#   pip install -r requirements.txt
+
+openai>=2.0.0
+python-dotenv>=1.0.0
+rich>=13.0.0
+
+# LangChain v1 + provider split packages
+langchain>=1.0.0
+langchain-core>=0.3.0
+langchain-openai>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-community>=0.3.0
+
+# Vector store (local, no credentials required)
+langchain-chroma>=0.1.2
+chromadb>=0.5.0
+
+# Optional: external web search provider often used with LangChain tools
+tavily-python>=0.5.0
